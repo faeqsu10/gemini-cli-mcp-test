@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fractal Tree Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="fractal-tree"></canvas>
+    <script>
+        const canvas = document.getElementById('fractal-tree');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function drawTree(startX, startY, len, angle, branchWidth, color1, color2) {
+            ctx.beginPath();
+            ctx.save();
+            ctx.strokeStyle = color1;
+            ctx.fillStyle = color2;
+            ctx.lineWidth = branchWidth;
+            ctx.translate(startX, startY);
+            ctx.rotate(angle * Math.PI / 180);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, -len);
+            ctx.stroke();
+
+            if (len < 10) {
+                ctx.restore();
+                return;
+            }
+
+            drawTree(0, -len, len * 0.8, -15, branchWidth * 0.8, 'red', 'green');
+            drawTree(0, -len, len * 0.8, 15, branchWidth * 0.8, 'red', 'green');
+
+            ctx.restore();
+        }
+
+        let frame = 0;
+        function animate() {
+            frame++;
+            let len = 100 + 50 * Math.sin(frame * 0.01);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTree(canvas.width / 2, canvas.height - 80, len, 0, 15, 'brown', 'green');
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
